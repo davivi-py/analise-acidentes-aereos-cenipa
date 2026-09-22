@@ -1,6 +1,6 @@
 # Análise de Acidentes Aéreos - CENIPA
 
-Projeto em andamento de análise exploratória de dados sobre ocorrências aeronáuticas no Brasil, registradas pelo CENIPA entre 2010 e 2021.
+Projeto em andamento de análise exploratória de dados sobre ocorrências aeronáuticas no Brasil, registradas pelo CENIPA entre 2007 e 2021.
 
 Dataset: https://www.kaggle.com/datasets/victorhiga/acidentes-areos-fav
 
