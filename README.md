@@ -26,4 +26,4 @@ Tratar dados faltantes, unir as tabelas, fazer análise univariada e bivariada, 
 
 ## Stack
 
-Python, Pandas, Seaborn, Matplotlib, rodando no Google Colab.
+Python, Pandas, Seaborn, Matplotlib,SQLite3 rodando no Google Colab.
