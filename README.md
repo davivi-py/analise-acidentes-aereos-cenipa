@@ -1,6 +1,8 @@
 # Análise de Acidentes Aéreos - CENIPA
 
-Projeto em andamento de análise exploratória de dados sobre ocorrências aeronáuticas no Brasil, registradas pelo CENIPA entre 2007 e 2023.
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/davivi-py/analise-acidentes-aereos-cenipa/blob/main/an%C3%A1lise.ipynb)
+
+Projeto em andamento de análise exploratória de dados sobre ocorrências aeronáuticas no Brasil, registradas pelo CENIPA entre 2007 e 2023 (9.821 ocorrências).
 
 Dataset: https://www.kaggle.com/datasets/victorhiga/acidentes-areos-fav
 
@@ -16,18 +18,34 @@ Do conjunto original de 5 tabelas, uso 3:
 - `aeronave.csv` - detalhes das aeronaves envolvidas
 - `ocorrencia_tipo.csv` - tipo/categoria da ocorrência
 
+![Modelo de dados](data/data_model.png)
+
 ## O que já foi feito
 
-Carregamento dos 3 datasets (encoding latin-1, separador `;`), primeiro olhar nos dados e checagem de valores faltantes.
+**Preparação**
 
-Construção de um banco SQLite local com as 3 tabelas, e montagem da query de tendência de fatalidades por ano (join entre `ocorrencia` e `aeronave`, conversão da data do formato brasileiro pro formato esperado pelo SQLite, agrupamento por ano).
+- Carregamento dos 3 datasets (encoding latin-1, separador `;`), primeiro olhar nos dados e checagem de valores faltantes.
+- Construção de um banco SQLite local com as 3 tabelas, para fazer as análises em SQL a partir do Python.
 
-Investigação de integridade do join: ao juntar `ocorrencia` e `aeronave`, o resultado tem mais linhas que `ocorrencia` sozinha. Confirmei que isso se explica por ocorrências com múltiplas aeronaves envolvidas (checagem rigorosa: a soma de `total_aeronaves_envolvidas` bate exatamente com o total de linhas do join). Também confirmei, comparando os valores de fatalidade entre aeronaves de uma mesma ocorrência, que `aeronave_fatalidades_total` é por aeronave, não um total duplicado — ou seja, somar essa coluna não gera contagem duplicada de mortes.
+**Integridade do JOIN entre `ocorrencia` e `aeronave`**
+
+- O JOIN gera mais linhas (9.926) do que a tabela `ocorrencia` sozinha (9.821).
+- A diferença se explica pelas ocorrências com mais de uma aeronave: a soma de `total_aeronaves_envolvidas` dá exatamente 9.926. Não há duplicação nem perda de dados.
+- `aeronave_fatalidades_total` é registrada por aeronave (e não é o total da ocorrência repetido), então somar essa coluna depois do JOIN não conta a mesma morte duas vezes.
+
+**Quais tipos de ocorrência são mais letais?**
+
+- A tabela `ocorrencia_tipo` tem 10.284 linhas para 9.821 ocorrências: algumas ocorrências têm mais de um tipo (ex.: "perda de controle no solo" e "pouso longo" no mesmo evento). Decidi contar a ocorrência em todos os tipos associados a ela.
+- Para medir letalidade, uso a proporção de ocorrências com pelo menos uma fatalidade em cada tipo, em vez do número total de mortes, para que um único acidente com muitas vítimas não distorça o resultado.
+- Primeira contagem de ocorrências totais e fatais por tipo já calculada em SQL.
 
 ## Próximos passos
 
-Fechar a documentação dessa investigação no notebook, trazer a query de tendência por ano pro Colab com visualização, tratar os demais dados faltantes, seguir com as outras sub-perguntas da análise temporal (letalidade por tipo de ocorrência ao longo do tempo), análise univariada e bivariada mais ampla, correlações, e conclusões.
+- Calcular a proporção de ocorrências fatais por tipo e visualizar em gráfico
+- Tendência de fatalidades por ano, com visualização
+- Tratar os demais dados faltantes
+- Análise univariada e bivariada mais ampla, correlações e conclusões
 
 ## Stack
 
-Python, Pandas, Seaborn, Matplotlib, SQLite3 rodando no Google Colab.
+Python, Pandas, SQLite3, Seaborn e Matplotlib, rodando no Google Colab.
